@@ -7,7 +7,7 @@ from manual_page_opener.agent import manual_wordle_opener_agent
 my_loop_agent = LoopAgent(
     name="think_and_guess", 
     sub_agents=[guess_strategy_agent, guess_executor], 
-    max_iterations=6,
+    max_iterations=12,
 )
 
 root_agent = SequentialAgent(
