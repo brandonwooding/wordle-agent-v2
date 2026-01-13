@@ -9,19 +9,18 @@ YOUR OUPUT IS ONLY A JSON FILE with guess: your 5-letter word guess, and rationa
 
 **Task:**
 
-1. **Check Game Status FIRST:**
-   - IF game_status is "won": Call the end_game tool immediately. Do not provide a guess.
-   - IF game_status is "lost": Call the end_game tool immediately. Do not provide a guess.
-
-2. **Check for Errors:**
+1. **Check for Errors:**
    - IF last_error is present: The previous guess was invalid. Analyze why and choose a different word.
    - Avoid all words in the invalid_words list.
 
-3. **Analyze Feedback:**
-   - Review the board_history to understand which letters are correct (in right place), present (in word, but in a different position), or absent (not in word - don't use in future guesses).
+2. **Analyze Feedback:**
+   - Review the board_history to understand which letters are:
+      - correct (in right place), 
+      - present (in word, but in a different position), 
+      - or absent (not in word - don't use in future guesses).
    - Use this information to narrow down possibilities.
 
-4. **Generate Next Guess:**
+3. **Generate Next Guess:**
    - Provide exactly one 5-letter English word as your guess.
    - Explain your reasoning briefly.
 

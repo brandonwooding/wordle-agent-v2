@@ -7,6 +7,7 @@ from google.adk.agents import BaseAgent
 from google.adk.events import Event, EventActions
 from google.genai.types import Content, Part
 from tools.browser_manager import BrowserManager
+from typing import Tuple, Optional
 
 class WordleExecutor(BaseAgent):
     """
@@ -14,15 +15,10 @@ class WordleExecutor(BaseAgent):
     and structured feedback capture.
     """
 
-    def create_text_event(self, text: str, state_changes: dict = None) -> Event:
-        """Create event with optional state delta for UI visibility"""
-        event = Event(
-            author=self.name,
-            content=Content(parts=[Part(text=text)])
-        )
-        if state_changes:
-            event.actions = EventActions(state_delta=state_changes)
-        return event
+    def create_text_event(self, text: str, state_changes: Optional[dict] = None) -> Tuple[Event, Optional[EventActions]]:
+        event = Event(author=self.name, content=Content(parts=[Part(text=text)]))
+        actions = EventActions(state_delta=state_changes) if state_changes else None
+        return event, actions
 
     async def _run_async_impl(self, ctx):
         driver = BrowserManager.get_driver()
@@ -155,7 +151,7 @@ class WordleExecutor(BaseAgent):
             for index, t in enumerate(last_five):
                 state = t.get_attribute("data-state")
                 feedback_list.append({
-                    "slot": index,
+                    "place": index + 1,
                     "letter": t.text.upper(),
                     "result": state
                 })

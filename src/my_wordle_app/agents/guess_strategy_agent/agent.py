@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import os
 from pathlib import Path
 from pydantic import BaseModel, Field
+from tools.logging import before_agent_callback, before_model_callback, after_agent_callback, after_model_callback
 
 dotenv_path = Path(__file__).resolve().parents[3] / ".env"
 load_dotenv(dotenv_path=dotenv_path)
@@ -16,14 +17,6 @@ instructions_path = current_dir / "instructions.md"
 with open(instructions_path, "r", encoding="utf-8") as f:
     agent_instructions = f.read()
 
-# --- Tool Definition for Exiting Loop ---
-def end_game(tool_context: ToolContext):
-    """Call this function when the game is won, lost, or should be terminated."""
-    print(f"  [Tool Call] end_game triggered by {tool_context.agent_name}")
-    tool_context.actions.escalate = True
-    return {}
-
-
 class GameGuess(BaseModel):
     guess: str = Field(description="single 5-letter word guess")
     rationale: str = Field(description="A short explanation of why this guess was chosen")
@@ -33,7 +26,11 @@ guess_strategy_agent = Agent(
     description="Strategy agent that formulates a good guess for the game Wordle",
     model="gemini-2.0-flash",
     instruction=agent_instructions,
-    tools=[end_game], 
+    # tools=[end_game], 
     output_schema=GameGuess, 
-    output_key = "current_plan"
+    output_key = "current_plan", 
+    before_agent_callback=before_agent_callback,
+    after_agent_callback=after_agent_callback,
+    before_model_callback=before_model_callback,
+    after_model_callback=after_model_callback,
 )

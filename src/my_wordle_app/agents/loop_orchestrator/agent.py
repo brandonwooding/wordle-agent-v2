@@ -3,10 +3,11 @@ from guess_strategy_agent.agent import guess_strategy_agent
 from guess_word_agent.agent import guess_executor
 from page_opener_agent.agent import web_pager_opener_agent
 from manual_page_opener.agent import manual_wordle_opener_agent
+from status_checker.agent import game_status_checker
 
 my_loop_agent = LoopAgent(
     name="think_and_guess", 
-    sub_agents=[guess_strategy_agent, guess_executor], 
+    sub_agents=[guess_strategy_agent, guess_executor, game_status_checker], 
     max_iterations=12,
 )
 
